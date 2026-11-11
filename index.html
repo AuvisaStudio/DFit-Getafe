@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Análisis web D·FIT</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: informe de una columna, tabla antes/después y calculadora al final */
+:root{
+  --bg:#f6f3f1; --surface:#ffffff; --line:#e3dcd7; --fg:#1d1c1f; --muted:#6c6560;
+  --accent:#a8705a; --accent-soft:#f0e3dc; --good:#2f7a52; --bad:#b24a3c; --warn:#a7761c;
+  --display:"Cormorant Garamond","Times New Roman",serif; --body:"Manrope",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17181b; --surface:#202126; --line:#34353b; --fg:#efe9e4; --muted:#a8a29d;
+  --accent:#d3a48b; --accent-soft:#2c2623; --good:#6bc497; --bad:#e38274; --warn:#e0b25b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17181b; --surface:#202126; --line:#34353b; --fg:#efe9e4; --muted:#a8a29d;
+  --accent:#d3a48b; --accent-soft:#2c2623; --good:#6bc497; --bad:#e38274; --warn:#e0b25b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+.wrap{max-width:860px;margin:0 auto;padding-block:48px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2{font-family:var(--display);font-weight:400;line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.2rem,6vw,3.4rem)}
+h2{font-size:clamp(1.7rem,4vw,2.3rem);margin-bottom:14px}
+h3{font-size:1rem;margin:0 0 4px}
+section{margin-top:56px}
+.eyebrow{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);font-weight:700}
+p{margin:0 0 12px;max-width:68ch}
+.muted{color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.fact strong{font-family:var(--display);font-size:2rem;font-weight:500;display:block;line-height:1;font-variant-numeric:tabular-nums}
+.fact span{font-size:.82rem;color:var(--muted)}
+@media (max-width:640px){.facts{grid-template-columns:1fr 1fr}}
+.list{display:grid;gap:10px;margin-top:16px}
+.item{display:grid;grid-template-columns:auto 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.pill{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;align-self:start;white-space:nowrap}
+.pill.bad{color:var(--bad);border:1px solid var(--bad)}
+.pill.warn{color:var(--warn);border:1px solid var(--warn)}
+.pill.good{color:var(--good);border:1px solid var(--good)}
+.item p{margin:0;color:var(--muted);font-size:.93rem}
+.tbl{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td.no{color:var(--bad)} td.yes{color:var(--good)}
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.calc label{display:grid;gap:4px;font-size:.84rem;color:var(--muted);margin-bottom:12px}
+.calc input{font:inherit;font-size:1rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);width:100%;font-variant-numeric:tabular-nums}
+.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.out{display:grid;gap:12px;align-content:start}
+.out div{border-bottom:1px solid var(--line);padding-bottom:10px;display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.out div:last-child{border:0}
+.out b{font-family:var(--display);font-size:1.8rem;font-weight:500;font-variant-numeric:tabular-nums;color:var(--accent)}
+.out span{font-size:.88rem;color:var(--muted)}
+@media (max-width:640px){.calc{grid-template-columns:1fr}}
+.note{font-size:.82rem;color:var(--muted);margin-top:10px}
+.callout{background:var(--accent-soft);border-radius:16px;padding:20px 22px;margin-top:16px}
+ol.plan{padding-left:20px;margin:12px 0 0}
+ol.plan li{margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <p class="eyebrow">Auvisa Studio · Análisis para D·FIT Getafe</p>
+  <h1>Dónde está D·FIT hoy y adónde puede llegar con su web</h1>
+  <p class="muted" style="margin-top:14px">D·FIT tiene algo que muy pocos centros de Getafe ofrecen: entrenamiento de fuerza pensado solo para mujeres, con nutrición, embarazo y posparto. El reto no es el servicio, es que la gente que lo busca lo encuentre.</p>
+
+  <section>
+    <p class="eyebrow">Situación actual</p>
+    <h2>Lo que ve hoy una clienta nueva</h2>
+    <div class="facts">
+      <div class="fact"><strong>135</strong><span>seguidores en Instagram</span></div>
+      <div class="fact"><strong>8</strong><span>publicaciones</span></div>
+      <div class="fact"><strong>1</strong><span>historia destacada (reservas de septiembre)</span></div>
+      <div class="fact"><strong>2</strong><span>vías de contacto: web y WhatsApp</span></div>
+    </div>
+    <div class="list">
+      <div class="item"><span class="pill bad">Crítico</span><div><h3>La captación depende de un Instagram pequeño</h3><p>Con 135 seguidores, el alcance es casi solo de conocidas. Quien busca en Google "entrenadora personal Getafe" o "entrenamiento posparto Getafe" no llega a D·FIT.</p></div></div>
+      <div class="item"><span class="pill bad">Crítico</span><div><h3>No hay un camino claro para la clienta nueva</h3><p>La app sirve para reservar a quien ya es clienta. Una persona que no conoce el centro no tiene un botón de "reserva tu primera sesión", solo un WhatsApp sin mensaje preparado.</p></div></div>
+      <div class="item"><span class="pill warn">Mejorable</span><div><h3>Información desactualizada y cortada</h3><p>La historia de reservas habla de septiembre y la dirección se corta en la bio ("C/Guanabacoa n10, 1…"). Da sensación de cuenta sin actividad.</p></div></div>
+      <div class="item"><span class="pill warn">Mejorable</span><div><h3>Sin prueba social</h3><p>No se ven reseñas, resultados ni historias de alumnas. En entrenamiento personal es lo que más pesa al decidir.</p></div></div>
+      <div class="item"><span class="pill good">Fortaleza</span><div><h3>Marca bien definida y nicho claro</h3><p>Logo cuidado, mensaje "mujeres reales" y servicios muy concretos (recomposición, embarazo, posparto, lesiones). Es una base perfecta para posicionarse.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Competencia</p>
+    <h2>Contra quién compite en Getafe</h2>
+    <p>Getafe tiene cadenas low cost como Basic-Fit (cuota base de unos 25 € y entrenador personal como extra), boxes de CrossFit y estudios de fitboxing o pilates. Ninguno de los que aparecen primero en Google se dirige solo a mujeres con fuerza y nutrición. D·FIT no tiene que competir en precio: tiene que ocupar ese hueco antes que otro.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Antes y después</p>
+    <h2>Qué cambia con la nueva web</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Aspecto</th><th>Hoy</th><th>Con la web de Auvisa</th></tr></thead>
+      <tbody>
+        <tr><td>Aparecer en Google</td><td class="no">Muy limitado</td><td class="yes">Páginas para "entrenadora personal Getafe", "posparto", "recomposición corporal"</td></tr>
+        <tr><td>Primera reserva</td><td class="no">WhatsApp en blanco</td><td class="yes">Formulario de valoración con día y hora que llega a WhatsApp ya escrito</td></tr>
+        <tr><td>Orientar a la clienta</td><td class="no">Tiene que preguntar</td><td class="yes">"¿Qué quieres conseguir?" le recomienda su programa</td></tr>
+        <tr><td>Confianza</td><td class="no">Sin reseñas visibles</td><td class="yes">Reseñas de Google, resultados y la historia de Dana</td></tr>
+        <tr><td>Dudas antes de apuntarse</td><td class="no">Mensajes uno a uno</td><td class="yes">Preguntas frecuentes respondidas en la web</td></tr>
+        <tr><td>Clientas actuales</td><td>App de reservas</td><td class="yes">Se mantiene la app, enlazada desde la web</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Impacto</p>
+    <h2>Cuánto puede aportar</h2>
+    <p class="muted">Ejemplo orientativo con cifras editables. Cambia los valores para verlo con los datos reales del centro.</p>
+    <div class="calc">
+      <div>
+        <label for="v">Visitas a la web al mes<input id="v" type="number" min="0" value="400"></label>
+        <label for="r">% que reserva una valoración<input id="r" type="number" min="0" max="100" step="0.5" value="4"></label>
+        <label for="c">% de valoraciones que se apuntan<input id="c" type="number" min="0" max="100" value="50"></label>
+        <label for="q">Cuota mensual media (€)<input id="q" type="number" min="0" value="90"></label>
+        <label for="m">Meses que se queda una clienta<input id="m" type="number" min="1" value="8"></label>
+      </div>
+      <div class="out" aria-live="polite">
+        <div><span>Valoraciones al mes</span><b id="o1">16</b></div>
+        <div><span>Clientas nuevas al mes</span><b id="o2">8</b></div>
+        <div><span>Facturación que suma cada mes de captación</span><b id="o3">720 €</b></div>
+        <div><span>Valor de esas clientas en su permanencia</span><b id="o4">5.760 €</b></div>
+        <div><span>En un año de captación</span><b id="o5">69.120 €</b></div>
+      </div>
+    </div>
+    <p class="note">Estimación, no garantía. Las visitas dependen del posicionamiento en Google y de la actividad en redes; la conversión, de la oferta y de cómo se atiende cada contacto.</p>
+  </section>
+
+  <section>
+    <p class="eyebrow">Propuesta</p>
+    <h2>Qué incluiría la web</h2>
+    <ol class="plan">
+      <li>Web nueva con la identidad de D·FIT, rápida y pensada para móvil.</li>
+      <li>Reserva de primera valoración conectada a WhatsApp, manteniendo la app para clientas.</li>
+      <li>Páginas de cada programa optimizadas para búsquedas locales en Getafe.</li>
+      <li>Reseñas, resultados y la historia de Dana para generar confianza.</li>
+      <li>Ficha de Google Business revisada y enlazada.</li>
+    </ol>
+    <div class="callout"><strong>En resumen:</strong> el servicio ya es diferente. La web hace que las mujeres de Getafe que buscan justo eso lo encuentren y reserven sin tener que preguntar.</div>
+  </section>
+</div>
+
+<script>
+const f=n=>Math.round(n).toLocaleString('es-ES');
+function calc(){
+  const g=id=>Math.max(0,parseFloat(document.getElementById(id).value)||0);
+  const val=g('v')*g('r')/100, cli=val*g('c')/100, mes=cli*g('q'), vida=mes*g('m');
+  document.getElementById('o1').textContent=f(val);
+  document.getElementById('o2').textContent=f(cli);
+  document.getElementById('o3').textContent=f(mes)+' €';
+  document.getElementById('o4').textContent=f(vida)+' €';
+  document.getElementById('o5').textContent=f(vida*12)+' €';
+}
+document.querySelectorAll('.calc input').forEach(i=>i.addEventListener('input',calc));calc();
+</script>
+
+</body>
+</html>
